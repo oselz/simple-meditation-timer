@@ -1,0 +1,229 @@
+.container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 400px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0.5em;
+    user-select: none;
+    color: #777;
+    background-color: white;
+    box-shadow: 5px 5px 20px 0 #aaa;
+
+    & > :last-child {
+        margin-top: auto;
+    }
+}
+
+.list {
+    overflow: auto;
+    border-top: 1px solid #ccc;
+}
+
+button {
+    width: 2.5em;
+    height: 2.5em;
+    cursor: pointer;
+    transition: 0.3s;
+    border: none;
+    border-radius: 999px;
+
+    &:hover,
+    &:focus {
+        color: black;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+        color: #ccc;
+
+        &:hover {
+            background: none;
+        }
+    }
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    height: 4em;
+    margin-bottom: 0.5em;
+    background-color: dimgrey;
+
+    button {
+        margin: 0.5em;
+        color: rgba(255, 255, 255, 0.8);
+
+        border: none;
+
+        &:hover,
+        &:focus {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        &:active {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+    }
+}
+
+.topControls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 0.5em;
+    padding: 0 0.5em;
+
+    & :last-child {
+        margin-left: auto;
+    }
+}
+
+.bottomControls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: center;
+    padding: 0.5em 0 0 0;
+    border-top: 1px solid #ccc;
+
+    > * {
+        margin: 0 1em;
+    }
+
+    .play {
+        width: 3em;
+        height: 3em;
+    }
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 4em;
+    transition: 1s;
+    color: white;
+
+    .icon {
+        margin: 0.2em;
+    }
+
+    & > :first-child {
+        margin-right: auto;
+    }
+
+    & > :last-child {
+        margin-left: auto;
+    }
+}
+
+.blank {
+    @extend .item;
+    background-color: #eee;
+}
+
+@keyframes flipover {
+    0% {
+        transform: rotate(0deg);
+    }
+    30% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes flipstart {
+    0%,
+    30% {
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    31%,
+    60% {
+        //transform: rotate(180deg);
+        opacity: 0;
+    }
+    61%,
+    90% {
+        opacity: 1;
+        transform: rotate(-180deg);
+        //translateY(1px);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes fliphalf {
+    0%,
+    29% {
+        opacity: 0;
+    }
+    30%,
+    61% {
+        opacity: 1;
+    }
+    62%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.timerFlip {
+    &.start {
+        animation: flipstart 10s linear infinite;
+    }
+
+    &.half {
+        animation: fliphalf 10s linear infinite;
+    }
+}
+
+.timer {
+    @extend .item;
+
+    .targetTime {
+        margin: 0 0.5em;
+    }
+}
+
+@keyframes ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    5% {
+        transform: rotate(-22deg) scale(1);
+    }
+    10% {
+        transform: rotate(15deg) scale(1.2);
+    }
+    20% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+.bellRing {
+    transform-origin: 50% 0;
+    animation: ring 5s ease;
+}
+
+.bell {
+    @extend .item;
+}
+
+.bells {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 8em;
+}

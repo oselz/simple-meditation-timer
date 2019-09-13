@@ -1,0 +1,14 @@
+.app {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+@media only screen and (min-width: 420px) {
+    .app {
+        align-self: flex-start;
+        max-width: 20em;
+        max-height: 100%;
+        margin: 0 auto;
+        padding: 2em 0;
+    }
+}

@@ -3,21 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.22",
-    "@fortawesome/pro-light-svg-icons": "^5.10.2",
-    "@fortawesome/pro-regular-svg-icons": "^5.10.2",
-    "@fortawesome/pro-solid-svg-icons": "^5.10.2",
-    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/pro-light-svg-icons": "^5.12.1",
+    "@fortawesome/pro-regular-svg-icons": "^5.12.1",
+    "@fortawesome/pro-solid-svg-icons": "^5.12.1",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "@types/classnames": "^2.2.9",
+    "@types/humanize-duration": "^3.18.0",
     "classnames": "^2.2.6",
-    "husky": "^3.0.5",
-    "lint-staged": "^9.2.5",
-    "node-sass": "^4.12.0",
-    "prettier": "^1.18.2",
+    "humanize-duration": "^3.21.0",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.1",
+    "prettier": "^1.19.1",
     "ramda": "^0.26.1",
-    "react": "^16.9.0",
+    "react": "^16.12.0",
     "react-beautiful-dnd": "^11.0.5",
-    "react-dom": "^16.9.0",
+    "react-dom": "^16.12.0",
     "react-scripts": "3.1.1",
     "sanitize.css": "^11.0.0",
     "typesafe-actions": "^4.4.2",
@@ -40,8 +43,8 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-     "prettier --single-quote --write",
-     "git add"
+      "prettier --single-quote --write",
+      "git add"
     ]
   },
   "browserslist": {
@@ -57,11 +60,11 @@
     ]
   },
   "devDependencies": {
-    "@types/react-beautiful-dnd": "^11.0.3",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.2",
-    "@types/ramda": "^0.26.21",
+    "@types/ramda": "^0.26.41",
     "@types/react": "16.9.2",
+    "@types/react-beautiful-dnd": "^11.0.5",
     "@types/react-dom": "16.9.0"
   }
 }

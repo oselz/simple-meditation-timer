@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, Dispatch } from 'react'
-
 import { Action, initialState, reducer, State } from '../timer/reducer'
 import Timer from '../timer'
 

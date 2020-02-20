@@ -4,6 +4,7 @@ import {
     Draggable,
     Droppable,
     DropResult,
+    Id,
 } from 'react-beautiful-dnd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -18,11 +19,21 @@ import {
     faHourglass,
     faQuestionCircle,
     faPalette,
+    faClock,
 } from '@fortawesome/pro-regular-svg-icons'
 
 import { useContextState } from '../app'
 import { ItemBell, ItemBlank, ItemTimer } from './items'
-import { add, back, forward, move, nextColour, pause, play } from './actions'
+import {
+    add,
+    back,
+    forward,
+    move,
+    nextColour,
+    pause,
+    play,
+    toggleTime,
+} from './actions'
 
 import styles from './styles.module.scss'
 
@@ -38,54 +49,62 @@ export const Timer: React.FC = () => {
             dispatch(move(result.source.index, result.destination.index))
         }
     }
+    const getStatus = (id: Id) => {
+        if (state.activeItem === id) {
+            return state.isPlaying ? 'playing' : 'paused'
+        }
+        return 'stopped'
+    }
 
     return (
         <div className={styles.container}>
             <TopControls />
-            {disabled && (
+            {disabled ? (
                 <div className={styles.action}>
                     <ItemBlank />
                 </div>
+            ) : (
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="actions">
+                        {dropProvided => (
+                            <div
+                                ref={dropProvided.innerRef}
+                                {...dropProvided.droppableProps}
+                                className={styles.list}
+                            >
+                                {state.entries.map((entry, index) => (
+                                    <Draggable
+                                        draggableId={entry.id}
+                                        index={index}
+                                        key={entry.id}
+                                    >
+                                        {dragProvided => (
+                                            <div
+                                                ref={dragProvided.innerRef}
+                                                {...dragProvided.draggableProps}
+                                                {...dragProvided.dragHandleProps}
+                                                className={styles.action}
+                                                key={entry.id}
+                                            >
+                                                {entry.item({
+                                                    id: entry.id,
+                                                    settings: entry.settings,
+                                                    status: getStatus(entry.id),
+                                                })}
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {dropProvided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             )}
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="actions">
-                    {dropProvided => (
-                        <div
-                            ref={dropProvided.innerRef}
-                            {...dropProvided.droppableProps}
-                            className={styles.list}
-                        >
-                            {state.entries.map((entry, index) => (
-                                <Draggable
-                                    draggableId={entry.id}
-                                    index={index}
-                                    key={entry.id}
-                                >
-                                    {dragProvided => (
-                                        <div
-                                            ref={dragProvided.innerRef}
-                                            {...dragProvided.draggableProps}
-                                            {...dragProvided.dragHandleProps}
-                                            className={styles.action}
-                                            key={entry.id}
-                                        >
-                                            {entry.item({
-                                                id: entry.id,
-                                                settings: entry.settings,
-                                                status: entry.status,
-                                            })}
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {dropProvided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+
             <div className={styles.bottomControls}>
                 <button
-                    disabled={disabled}
+                    disabled={disabled || !state.activeItem}
                     title="Jump back"
                     onClick={() => dispatch(back())}
                 >
@@ -112,7 +131,7 @@ export const Timer: React.FC = () => {
                     )}
                 </button>
                 <button
-                    disabled={disabled}
+                    disabled={disabled || !state.activeItem}
                     title="Jump forward"
                     onClick={() => dispatch(forward())}
                 >
@@ -158,6 +177,12 @@ const TopControls = () => {
                 </div>
             </button>
             <div>
+                <button
+                    title="Precise or human times"
+                    onClick={() => dispatch(toggleTime())}
+                >
+                    <FontAwesomeIcon icon={faClock} />
+                </button>
                 <button
                     title="Change colour palette"
                     onClick={() => dispatch(nextColour())}

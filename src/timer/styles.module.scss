@@ -33,6 +33,7 @@ button {
     &:focus {
         color: black;
         background-color: rgba(0, 0, 0, 0.1);
+        outline: none;
     }
 
     &:active {
@@ -65,10 +66,14 @@ button {
         &:focus {
             color: white;
             background-color: rgba(255, 255, 255, 0.3);
+            outline: none;
         }
 
         &:active {
             background-color: rgba(255, 255, 255, 0.5);
+        }
+        &:disabled {
+            color: rgba(255, 255, 255, 0.2);
         }
     }
 }
@@ -180,19 +185,34 @@ button {
 
 .timerFlip {
     &.start {
-        animation: flipstart 10s linear infinite;
+        animation: flipstart 3500ms linear infinite;
     }
 
     &.half {
-        animation: fliphalf 10s linear infinite;
+        animation: fliphalf 3500ms linear infinite;
     }
 }
 
 .timer {
     @extend .item;
+}
 
-    .targetTime {
-        margin: 0 0.5em;
+.inputTime {
+    margin: 0 0.5em;
+    input {
+        margin: 0;
+        min-width: 0;
+        cursor: pointer;
+        overflow: hidden;
+        border: none;
+        outline: none;
+        resize: none;
+        box-shadow: none;
+        background: transparent;
+        &:active,
+        &:focus {
+            background: rgba(255, 255, 255, 0.2);
+        }
     }
 }
 
@@ -204,7 +224,7 @@ button {
         transform: rotate(-22deg) scale(1);
     }
     10% {
-        transform: rotate(15deg) scale(1.2);
+        transform: rotate(15deg) scale(1.1);
     }
     20% {
         transform: rotate(0deg) scale(1);
@@ -213,7 +233,7 @@ button {
 
 .bellRing {
     transform-origin: 50% 0;
-    animation: ring 5s ease;
+    animation: ring 4s ease-out;
 }
 
 .bell {

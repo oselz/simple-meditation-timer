@@ -5,9 +5,10 @@ import * as R from 'ramda'
 import { Path } from 'ramda'
 import { uid } from '../lib/utils'
 
-import { Item, ItemBell, ItemTimer, Settings, Status } from './items'
+import { Item, ItemBell, ItemTimer, Settings } from './items'
 import {
     add,
+    back,
     forward,
     move,
     nextColour,
@@ -15,6 +16,7 @@ import {
     play,
     remove,
     save,
+    toggleTime,
 } from './actions'
 
 // magic!
@@ -22,7 +24,7 @@ import * as actions from './actions'
 
 export type Action = ActionType<typeof actions>
 
-enum Colours {
+export enum Colours {
     blue = '#2980b9',
     red = '#c0392b',
     darkgrey = '#7f8c8d',
@@ -45,7 +47,6 @@ const colours = coloursGen()
 export type Entry = {
     id: Id
     item: Item
-    status: Status
     settings?: Settings
 }
 
@@ -53,21 +54,24 @@ export type State = {
     entries: Entry[]
     isPlaying: boolean
     colour: string
+    humanTime: boolean
+    activeItem: Id | null
 }
 
 export const initialState: State = {
     entries: [
-        { id: uid(), item: ItemBell, status: 'stop', settings: { bells: 1 } },
+        { id: uid(), item: ItemBell, settings: { bells: 1 } },
         {
             id: uid(),
             item: ItemTimer,
-            status: 'stop',
-            settings: { length: 10000 },
+            settings: { length: 5 * 60 * 1000 },
         },
-        { id: uid(), item: ItemBell, status: 'stop', settings: { bells: 3 } },
+        { id: uid(), item: ItemBell, settings: { bells: 3 } },
     ],
     isPlaying: false,
     colour: colours.next().value,
+    activeItem: null,
+    humanTime: true,
 }
 
 function entryIndex(id: Id, entries: Entry[]) {
@@ -88,11 +92,11 @@ export function reducer(state: State, action: Action): State {
                     {
                         id: uid(),
                         item: action.payload,
-                        status: 'stop',
                     },
                 ]),
             }
         case getType(remove):
+            const active = state.activeItem === action.payload
             return {
                 ...state,
                 entries: R.remove(
@@ -100,6 +104,8 @@ export function reducer(state: State, action: Action): State {
                     1,
                     state.entries,
                 ),
+                activeItem: active ? null : state.activeItem,
+                isPlaying: active ? false : state.isPlaying,
             }
         case getType(move):
             return {
@@ -110,8 +116,40 @@ export function reducer(state: State, action: Action): State {
                     state.entries,
                 ),
             }
-        case getType(forward):
-            return state
+        case getType(forward): {
+            // search for active as list can be re-ordered whilst playing
+            const index = R.findIndex(R.propEq('id', state.activeItem))(
+                state.entries,
+            )
+            if (index !== -1 && index < state.entries.length - 1) {
+                return {
+                    ...state,
+                    activeItem: state.entries[index + 1].id,
+                }
+            }
+            return {
+                ...state,
+                activeItem: null,
+                isPlaying: false,
+            }
+        }
+        case getType(back): {
+            // search for active as list can be re-ordered whilst playing
+            const index = R.findIndex(R.propEq('id', state.activeItem))(
+                state.entries,
+            )
+            if (index > 0) {
+                return {
+                    ...state,
+                    activeItem: state.entries[index - 1].id,
+                }
+            }
+            return {
+                ...state,
+                activeItem: null,
+                isPlaying: false,
+            }
+        }
         case getType(save):
             return {
                 ...state,
@@ -126,11 +164,23 @@ export function reducer(state: State, action: Action): State {
                 ...state,
                 colour: colours.next().value,
             }
+        case getType(toggleTime):
+            return {
+                ...state,
+                humanTime: !state.humanTime,
+            }
         case getType(play):
+            return {
+                ...state,
+                isPlaying: true,
+                activeItem: state.activeItem
+                    ? state.activeItem
+                    : state.entries[0].id,
+            }
         case getType(pause):
             return {
                 ...state,
-                isPlaying: !state.isPlaying,
+                isPlaying: false,
             }
 
         default:

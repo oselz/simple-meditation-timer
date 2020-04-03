@@ -1,10 +1,10 @@
 import { createAction } from 'typesafe-actions'
 import { Id } from 'react-beautiful-dnd'
 
-import { Item, Settings } from './items'
+import { ItemType, Settings } from './items'
 
 export const add = createAction('timer/ADD', action => {
-    return (item: Item) => action(item)
+    return (type: ItemType) => action(type)
 })
 export const remove = createAction('timer/REMOVE', action => {
     return (id: Id) => action(id)

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Id } from 'react-beautiful-dnd'
 import classNames from 'classnames'
+import useSound from 'use-sound'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faHourglass,
@@ -34,13 +35,26 @@ type BellSettings = {
 
 export type Settings = TimerSettings | BellSettings
 
+export type ItemType = 'timer' | 'bell' | 'blank'
+
 type ItemProps = {
     id: Id
-    status: Status
+    status?: Status
     settings?: Settings
+    type?: ItemType
 }
 
 export type Item = React.FC<ItemProps>
+
+export const Item: Item = ({ type, ...props }) => {
+    switch (type) {
+        case 'timer':
+            return <ItemTimer {...props} />
+        case 'bell':
+            return <ItemBell {...props} />
+    }
+    return <ItemBlank />
+}
 
 export const ItemBlank: React.FC = () => {
     return (
@@ -49,7 +63,6 @@ export const ItemBlank: React.FC = () => {
         </div>
     )
 }
-
 export const ItemTimer: Item = ({ id, status, settings }) => {
     const [state, dispatch] = useContextState()
     const [elapsed, setElapsed] = useState(0)
@@ -151,13 +164,38 @@ export const ItemBell: Item = ({ id, status, settings }) => {
     const [current, setCurrent] = useState(0)
 
     const bells = settings && 'bells' in settings ? settings.bells : 1
+    const [play, { sound, stop }] = useSound('/sounds/bell.mp3', {
+        sprite: {
+            bellOne: [0, 2600],
+            bellTwo: [12600, 3800],
+            bellThree: [37200, 3800],
+        },
+    })
 
     useInterval(
         () => {
             setCurrent(current + 1)
+            if (current < bells - 1) {
+                sound && sound.volume(1)
+                play({ id: 'bellThree' })
+            }
         },
-        status === 'playing' ? 1000 : null,
+        status === 'playing' ? 2500 : null,
     )
+
+    useEffect(() => {
+        if (status === 'playing') {
+            stop()
+            sound && sound.volume(1)
+            play({ id: 'bellThree' })
+        }
+        if (status === 'paused') {
+            sound && sound.fade(1, 0, 500)
+        }
+        if (status === 'stopped') {
+            sound && sound.fade(1, 0, 3500)
+        }
+    }, [status, play, stop, sound])
 
     useEffect(() => {
         if (status === 'stopped') {
@@ -165,7 +203,7 @@ export const ItemBell: Item = ({ id, status, settings }) => {
         } else if (current >= bells) {
             dispatch(forward())
         }
-    }, [status, bells, current, dispatch])
+    }, [status, bells, current, dispatch, play])
 
     function increment(num: number = 1) {
         dispatch(save(id, { bells: bells + num }))

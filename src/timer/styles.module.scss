@@ -8,8 +8,8 @@
     padding: 0.5em;
     user-select: none;
     color: #777;
-    background-color: white;
-    box-shadow: 5px 5px 20px 0 #aaa;
+    background-color: #f5f6f7;
+    //box-shadow: 5px 5px 20px 0 #aaa;
 
     & > :last-child {
         margin-top: auto;
@@ -195,6 +195,7 @@ button {
 
 .timer {
     @extend .item;
+    font-variant-numeric: tabular-nums;
 }
 
 .inputTime {

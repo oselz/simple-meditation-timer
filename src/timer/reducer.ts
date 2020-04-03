@@ -5,7 +5,7 @@ import * as R from 'ramda'
 import { Path } from 'ramda'
 import { uid } from '../lib/utils'
 
-import { Item, ItemBell, ItemTimer, Settings } from './items'
+import { Item, ItemBell, ItemTimer, ItemType, Settings } from './items'
 import {
     add,
     back,
@@ -46,7 +46,7 @@ const colours = coloursGen()
 
 export type Entry = {
     id: Id
-    item: Item
+    type: ItemType
     settings?: Settings
 }
 
@@ -60,13 +60,13 @@ export type State = {
 
 export const initialState: State = {
     entries: [
-        { id: uid(), item: ItemBell, settings: { bells: 1 } },
+        { id: uid(), type: 'bell', settings: { bells: 1 } },
         {
             id: uid(),
-            item: ItemTimer,
+            type: 'timer',
             settings: { length: 5 * 60 * 1000 },
         },
-        { id: uid(), item: ItemBell, settings: { bells: 3 } },
+        { id: uid(), type: 'bell', settings: { bells: 3 } },
     ],
     isPlaying: false,
     colour: colours.next().value,
@@ -91,7 +91,7 @@ export function reducer(state: State, action: Action): State {
                 entries: R.concat(state.entries, [
                     {
                         id: uid(),
-                        item: action.payload,
+                        type: action.payload,
                     },
                 ]),
             }
@@ -187,26 +187,3 @@ export function reducer(state: State, action: Action): State {
             return state
     }
 }
-
-// const onFinish = (id: Id) => {
-//     const current = R.findIndex(
-//         R.propEq('status', 'play'),
-//         state.entries,
-//     )
-//     let update = R.set(R.lensPath([current, 'status']), 'stop', state.entries)
-//     if (current < state.entries.length) {
-//         update = R.set(R.lensPath([current + 1, 'status']), 'play', update)
-//     }
-//     setState({
-//         ...state,
-//         entries: update,
-//     })
-//     // stop current and start next (if any)
-// }
-
-// const updateSettings = (id: Id, settings: Settings) => {
-//     const lens = R.lensPath(
-//         [R.findIndex(R.propEq('id', id), state.entries), 'settings'],
-//     )
-//     setState({ ...state, entries: R.set(lens, settings, state.entries) })
-// }

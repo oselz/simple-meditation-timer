@@ -23,7 +23,7 @@ import {
 } from '@fortawesome/pro-regular-svg-icons'
 
 import { useContextState } from '../app'
-import { ItemBell, ItemBlank, ItemTimer } from './items'
+import { Item } from './items'
 import {
     add,
     back,
@@ -61,7 +61,7 @@ export const Timer: React.FC = () => {
             <TopControls />
             {disabled ? (
                 <div className={styles.action}>
-                    <ItemBlank />
+                    <Item type="blank" id="none" />
                 </div>
             ) : (
                 <DragDropContext onDragEnd={onDragEnd}>
@@ -86,11 +86,12 @@ export const Timer: React.FC = () => {
                                                 className={styles.action}
                                                 key={entry.id}
                                             >
-                                                {entry.item({
-                                                    id: entry.id,
-                                                    settings: entry.settings,
-                                                    status: getStatus(entry.id),
-                                                })}
+                                                <Item
+                                                    type={entry.type}
+                                                    id={entry.id}
+                                                    settings={entry.settings}
+                                                    status={getStatus(entry.id)}
+                                                />
                                             </div>
                                         )}
                                     </Draggable>
@@ -148,7 +149,7 @@ const TopControls = () => {
         <div className={styles.topControls}>
             <button
                 title="Add new bell(s)"
-                onClick={() => dispatch(add(ItemBell))}
+                onClick={() => dispatch(add('bell'))}
             >
                 <div className="fa-layers fa-fw">
                     <FontAwesomeIcon
@@ -163,7 +164,7 @@ const TopControls = () => {
             </button>
             <button
                 title="Add new timer"
-                onClick={() => dispatch(add(ItemTimer))}
+                onClick={() => dispatch(add('timer'))}
             >
                 <div className="fa-layers fa-fw">
                     <FontAwesomeIcon

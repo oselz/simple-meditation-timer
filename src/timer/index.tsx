@@ -190,9 +190,9 @@ const TopControls = () => {
                 >
                     <FontAwesomeIcon icon={faPalette} />
                 </button>
-                <button title="About">
-                    <FontAwesomeIcon icon={faQuestionCircle} />
-                </button>
+                {/*<button title="About">*/}
+                {/*    <FontAwesomeIcon icon={faQuestionCircle} />*/}
+                {/*</button>*/}
             </div>
         </div>
     )

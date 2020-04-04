@@ -5,7 +5,7 @@ import * as R from 'ramda'
 import { Path } from 'ramda'
 import { uid } from '../lib/utils'
 
-import { Item, ItemBell, ItemTimer, ItemType, Settings } from './items'
+import { ItemType, Settings } from './items'
 import {
     add,
     back,

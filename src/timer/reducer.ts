@@ -16,6 +16,7 @@ import {
     play,
     remove,
     save,
+    toggleHelp,
     toggleTime,
 } from './actions'
 
@@ -56,6 +57,7 @@ export type State = {
     colour: string
     humanTime: boolean
     activeItem: Id | null
+    showHelp: boolean
 }
 
 export const initialState: State = {
@@ -72,6 +74,7 @@ export const initialState: State = {
     colour: colours.next().value,
     activeItem: null,
     humanTime: true,
+    showHelp: false,
 }
 
 function entryIndex(id: Id, entries: Entry[]) {
@@ -181,6 +184,12 @@ export function reducer(state: State, action: Action): State {
             return {
                 ...state,
                 isPlaying: false,
+            }
+
+        case getType(toggleHelp):
+            return {
+                ...state,
+                showHelp: !state.showHelp,
             }
 
         default:

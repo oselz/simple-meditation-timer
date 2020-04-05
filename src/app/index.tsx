@@ -9,6 +9,7 @@ import { Action, initialState, reducer, State } from '../timer/reducer'
 import Timer from '../timer'
 
 import styles from './styles.module.scss'
+import { Help } from '../help'
 
 const StateContext = createContext({} as [State, Dispatch<Action>])
 export const useContextState = () => useContext(StateContext)
@@ -26,7 +27,7 @@ export const App: React.FC = () => {
     return (
         <div className={styles.app}>
             <StateContext.Provider value={[state, dispatch]}>
-                <Timer />
+                {state.showHelp ? <Help /> : <Timer />}
             </StateContext.Provider>
         </div>
     )

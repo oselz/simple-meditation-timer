@@ -22,3 +22,4 @@ export const move = createAction('timer/MOVE', action => {
 })
 export const nextColour = createAction('timer/NEXT_COLOUR')
 export const toggleTime = createAction('timer/TOGGLE_TIME')
+export const toggleHelp = createAction('timer/TOGGLE_HELP')

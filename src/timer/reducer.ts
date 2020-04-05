@@ -168,11 +168,16 @@ export function reducer(state: State, action: Action): State {
                     state.entries,
                 ),
             }
-        case getType(nextColour):
+        case getType(nextColour): {
+            let colour = colours.next().value
+            if (colour === state.colour) {
+                colour = colours.next().value
+            }
             return {
                 ...state,
-                colour: colours.next().value,
+                colour,
             }
+        }
         case getType(toggleTime):
             return {
                 ...state,

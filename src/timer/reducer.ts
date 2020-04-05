@@ -10,6 +10,7 @@ import {
     add,
     back,
     forward,
+    jump,
     move,
     nextColour,
     pause,
@@ -153,6 +154,11 @@ export function reducer(state: State, action: Action): State {
                 isPlaying: false,
             }
         }
+        case getType(jump):
+            return {
+                ...state,
+                activeItem: action.payload.id,
+            }
         case getType(save):
             return {
                 ...state,

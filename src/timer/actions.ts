@@ -14,6 +14,9 @@ export const stop = createAction('timer/STOP')
 export const pause = createAction('timer/PAUSE')
 export const forward = createAction('timer/FORWARD')
 export const back = createAction('timer/BACK')
+export const jump = createAction('time/JUMP', action => {
+    return (id: Id) => action({ id })
+})
 export const save = createAction('timer/SAVE', action => {
     return (id: Id, settings: Settings) => action({ id, settings })
 })

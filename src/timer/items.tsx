@@ -15,7 +15,7 @@ import {
     faHourglassHalf,
 } from '@fortawesome/pro-regular-svg-icons'
 import { faEmptySet } from '@fortawesome/pro-light-svg-icons'
-import { forward, remove, save } from './actions'
+import { forward, jump, remove, save } from './actions'
 import { formatTime, nextTime, prevTime } from './time'
 import { useContextState } from '../app'
 
@@ -70,6 +70,9 @@ export const ItemTimer: Item = ({ id, status, settings }) => {
     const length =
         settings && 'length' in settings ? settings.length : 1000 * 60 * 5
 
+    const editable =
+        !state.isPlaying || (state.isPlaying && state.activeItem !== id)
+
     useInterval(
         () => {
             setElapsed(elapsed + 1000)
@@ -93,6 +96,7 @@ export const ItemTimer: Item = ({ id, status, settings }) => {
     return (
         <div
             className={styles.timer}
+            onClick={() => state.activeItem && dispatch(jump(id))}
             style={{
                 backgroundColor:
                     status !== 'stopped' || state.activeItem === null
@@ -102,17 +106,23 @@ export const ItemTimer: Item = ({ id, status, settings }) => {
         >
             {length < 15000 ? (
                 <button
-                    onClick={() => dispatch(remove(id))}
+                    onClick={e => {
+                        e.stopPropagation()
+                        dispatch(remove(id))
+                    }}
                     title="Remove timer"
-                    disabled={state.isPlaying}
+                    disabled={!editable}
                 >
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
             ) : (
                 <button
-                    onClick={() => saveTime(prevTime(length))}
+                    onClick={e => {
+                        e.stopPropagation()
+                        saveTime(prevTime(length))
+                    }}
                     title="Decrease time"
-                    disabled={state.isPlaying}
+                    disabled={!editable}
                 >
                     <FontAwesomeIcon icon={faMinus} />
                 </button>
@@ -149,9 +159,12 @@ export const ItemTimer: Item = ({ id, status, settings }) => {
                 {formatTime(length - elapsed, state.humanTime)}
             </div>
             <button
-                onClick={() => saveTime(nextTime(length))}
+                onClick={e => {
+                    e.stopPropagation()
+                    saveTime(nextTime(length))
+                }}
                 title="Increase time"
-                disabled={state.isPlaying}
+                disabled={!editable}
             >
                 <FontAwesomeIcon icon={faPlus} />
             </button>
@@ -164,6 +177,8 @@ export const ItemBell: Item = ({ id, status, settings }) => {
     const [current, setCurrent] = useState(0)
 
     const bells = settings && 'bells' in settings ? settings.bells : 1
+    const editable =
+        !state.isPlaying || (state.isPlaying && state.activeItem !== id)
     const [play, { sound, stop }] = useSound('/sounds/bell.mp3', {
         sprite: {
             bellOne: [0, 2600],
@@ -205,16 +220,21 @@ export const ItemBell: Item = ({ id, status, settings }) => {
         }
     }, [status, bells, current, dispatch, play])
 
-    function increment(num: number = 1) {
+    function increment(
+        event: React.MouseEvent<HTMLButtonElement>,
+        num: number = 1,
+    ) {
+        event.stopPropagation()
         dispatch(save(id, { bells: bells + num }))
     }
-    function decrement() {
-        increment(-1)
+    function decrement(event: React.MouseEvent<HTMLButtonElement>) {
+        increment(event, -1)
     }
 
     return (
         <div
             className={styles.bell}
+            onClick={() => state.activeItem && dispatch(jump(id))}
             style={{
                 backgroundColor:
                     status !== 'stopped' || state.activeItem === null
@@ -226,7 +246,7 @@ export const ItemBell: Item = ({ id, status, settings }) => {
                 <button
                     onClick={decrement}
                     title="Decrease bells"
-                    disabled={state.isPlaying}
+                    disabled={!editable}
                 >
                     <FontAwesomeIcon icon={faMinus} />
                 </button>
@@ -234,7 +254,7 @@ export const ItemBell: Item = ({ id, status, settings }) => {
                 <button
                     onClick={() => dispatch(remove(id))}
                     title="Remove bell"
-                    disabled={state.isPlaying}
+                    disabled={!editable}
                 >
                     <FontAwesomeIcon icon={faTrash} />
                 </button>
@@ -254,8 +274,8 @@ export const ItemBell: Item = ({ id, status, settings }) => {
                 ))}
             </div>
             <button
-                onClick={() => increment()}
-                disabled={bells > 6 || state.isPlaying}
+                onClick={increment}
+                disabled={bells > 6 || !editable}
                 title="Increase bells"
             >
                 <FontAwesomeIcon icon={faPlus} />

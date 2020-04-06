@@ -208,7 +208,7 @@ export const ItemBell: Item = ({ id, status, settings }) => {
             sound && sound.fade(1, 0, 500)
         }
         if (status === 'stopped') {
-            sound && sound.fade(1, 0, 3500)
+            // sound && sound.fade(1, 0, 3500)
         }
     }, [status, play, stop, sound])
 
@@ -252,7 +252,10 @@ export const ItemBell: Item = ({ id, status, settings }) => {
                 </button>
             ) : (
                 <button
-                    onClick={() => dispatch(remove(id))}
+                    onClick={e => {
+                        e.stopPropagation()
+                        dispatch(remove(id))
+                    }}
                     title="Remove bell"
                     disabled={!editable}
                 >

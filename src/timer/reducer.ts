@@ -40,7 +40,7 @@ export enum Colours {
 }
 
 function* coloursGen() {
-    const colours = Object.values(Colours)
+    const colours: string[] = Object.values(Colours)
     while (true) yield* colours
 }
 
@@ -72,7 +72,7 @@ export const initialState: State = {
         { id: uid(), type: 'bell', settings: { bells: 3 } },
     ],
     isPlaying: false,
-    colour: colours.next().value,
+    colour: colours.next().value || Colours.grey.valueOf(),
     activeItem: null,
     humanTime: true,
     showHelp: false,
@@ -157,7 +157,7 @@ export function reducer(state: State, action: Action): State {
         case getType(jump):
             return {
                 ...state,
-                activeItem: action.payload.id,
+                activeItem: action.payload,
             }
         case getType(save):
             return {
@@ -169,9 +169,9 @@ export function reducer(state: State, action: Action): State {
                 ),
             }
         case getType(nextColour): {
-            let colour = colours.next().value
+            let colour = colours.next().value || Colours.grey.valueOf()
             if (colour === state.colour) {
-                colour = colours.next().value
+                colour = colours.next().value || Colours.grey.valueOf()
             }
             return {
                 ...state,

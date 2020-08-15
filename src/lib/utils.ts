@@ -1,9 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 export function uid() {
-    return Math.random()
-        .toString(35)
-        .substr(2, 7)
+    return Math.random().toString(35).substr(2, 7)
 }
 
 export const useInterval = (

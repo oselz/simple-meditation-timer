@@ -9,12 +9,12 @@ import {
     faPlus,
     faMinus,
     faTrash,
-} from '@fortawesome/pro-solid-svg-icons'
-import {
     faHourglassStart,
     faHourglassHalf,
-} from '@fortawesome/pro-regular-svg-icons'
-import { faEmptySet } from '@fortawesome/pro-light-svg-icons'
+    faMinusCircle
+} from '@fortawesome/free-solid-svg-icons'
+import {
+} from '@fortawesome/free-regular-svg-icons'
 import { forward, jump, remove, save } from './actions'
 import { formatTime, nextTime, prevTime } from './time'
 import { useContextState } from '../app'
@@ -59,7 +59,7 @@ export const Item: Item = ({ type, ...props }) => {
 export const ItemBlank: React.FC = () => {
     return (
         <div className={styles.blank}>
-            <FontAwesomeIcon icon={faEmptySet} size={'2x'} />
+            <FontAwesomeIcon icon={faMinusCircle} size={'2x'} />
         </div>
     )
 }

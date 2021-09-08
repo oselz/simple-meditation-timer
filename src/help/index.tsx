@@ -1,11 +1,13 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+    faPlusSquare
+} from '@fortawesome/free-regular-svg-icons'
+import {
     faTimes,
-    faSignOut,
+    faSignOutAlt,
     faEllipsisV,
-} from '@fortawesome/pro-regular-svg-icons'
-import { faPlusSquare } from '@fortawesome/pro-light-svg-icons'
+} from '@fortawesome/free-solid-svg-icons'
 import { useContextState } from '../app'
 import { toggleHelp } from '../timer/actions'
 
@@ -16,7 +18,7 @@ export const Help: React.FC = () => {
     return (
         <div className={styles.paper}>
             <div className={styles.header}>
-                <img src="logo192.png" title="Logo" />
+                <img src="logo192.png" title="Logo" alt="Logo" />
                 <a href="mailto:contact@simplemeditationtimer.com">Contact</a>
                 <button title="Close" onClick={() => dispatch(toggleHelp())}>
                     <FontAwesomeIcon icon={faTimes} />
@@ -36,7 +38,7 @@ export const Help: React.FC = () => {
                         </dt>
                         <dd>
                             From the share menu [{' '}
-                            <FontAwesomeIcon rotation={270} icon={faSignOut} />{' '}
+                            <FontAwesomeIcon rotation={270} icon={faSignOutAlt} />{' '}
                             ] select{' '}
                             <em>
                                 Add to Home Screen&nbsp;&nbsp;
@@ -56,7 +58,7 @@ export const Help: React.FC = () => {
                 </p>
             </div>
             <div className={styles.footer}>
-                <small>Copyright 2020 Cardo Limited</small>
+                <small>Copyright 2021 Daniel Brownlees</small>
             </div>
         </div>
     )

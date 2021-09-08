@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
     DragDropContext,
     Draggable,
@@ -6,6 +6,7 @@ import {
     DropResult,
     Id,
 } from 'react-beautiful-dnd'
+import NoSleep from "nosleep.js"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faFastBackward,
@@ -13,14 +14,14 @@ import {
     faPause,
     faPlay,
     faPlus,
-} from '@fortawesome/pro-solid-svg-icons'
+    faPalette,
+    faClock,
+    faQuestionCircle,
+} from '@fortawesome/free-solid-svg-icons'
 import {
     faBell,
     faHourglass,
-    faQuestionCircle,
-    faPalette,
-    faClock,
-} from '@fortawesome/pro-regular-svg-icons'
+} from '@fortawesome/free-regular-svg-icons'
 
 import { useContextState } from '../app'
 import { Item } from './items'
@@ -38,9 +39,18 @@ import {
 
 import styles from './styles.module.scss'
 
+const noSleep = new NoSleep()
+
 export const Timer: React.FC = () => {
     const [state, dispatch] = useContextState()
     const disabled = state.entries.length === 0
+
+    useEffect(
+        () => {
+            state.isPlaying ? noSleep.enable() : noSleep.disable()
+        },
+        [state.isPlaying]
+    )
 
     const onDragEnd = (result: DropResult) => {
         if (
